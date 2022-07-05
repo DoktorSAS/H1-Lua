@@ -1,6 +1,6 @@
 --[[
     Scavanger drop mod 
-    Developed by @DoktorSAS
+    Developed by @DoktorSAS && yoyo1live
 
     Support the creator on Patreon at https://www.patreon.com/DoktorSAS
 ]]
