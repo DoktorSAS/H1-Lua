@@ -32,7 +32,7 @@ game:oninterval(function ()
 
                     local weapons = player:getweaponslistprimaries()
                     for windex, weapon in ipairs(weapons) do
-                         player:setweaponammostock( weapon, player:getweaponammoclip( weapon ) + game:weaponclipsize( weapon ) )
+                         player:setweaponammostock( weapon, player:getweaponammostock( weapon ) + game:weaponclipsize( weapon ) )
                     end
                 end
             end
