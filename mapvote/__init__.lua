@@ -274,7 +274,6 @@ function onPlayerConnected( player )
 
         player:onnotifyonce("disconnect", function ()
             disconnectListener:clear()
-            spawnListener:clear()
         end)
     end
 end
