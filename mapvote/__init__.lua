@@ -225,9 +225,6 @@ function onPlayerConnected( player )
     if not player:isentityabot() then
         table.insert(players, player)
         local disconnectListener = player:onnotifyonce("disconnect", function ()  player:onPlayerDisconnect() end)
-        local spawnListener = player:onnotifyonce("spawned_player", function ()
-            --mapvote()
-        end)
 
         local onMapvoteStart = player:onnotifyonce("start_vote", function ()
             local client_ui_objects = {}
