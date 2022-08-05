@@ -83,7 +83,7 @@ function choosefromatable(table)
 end
 
 function removefromalist(table, value)
-    local index = tablefind(players, value)
+    local index = tablefind(table, value)
 	if index ~= nil then
 		table.remove(table, index)
 	end
@@ -187,6 +187,21 @@ function mapvote()
                 game:executecommand('set sv_maprotationcurrent "gametype ' .. gametypes[gametypes_to_vote[3]] .. ' map ' .. maps[maps_to_vote[3]] .. '"')
             end
             level:notify("end_vote")
+            server_ui_objects.background_line:destroy()
+            server_ui_objects.timer:destroy()
+            server_ui_objects.guide:destroy()
+
+            server_ui_objects.mapid_map1:destroy()
+            server_ui_objects.gametype_map1:destroy()
+            server_ui_objects.votes_map1:destroy()
+        
+            server_ui_objects.mapid_map2:destroy()
+            server_ui_objects.gametype_map2:destroy()
+            server_ui_objects.votes_map2:destroy()
+            
+            server_ui_objects.mapid_map3:destroy()
+            server_ui_objects.gametype_map3:destroy()
+            server_ui_objects.votes_map3:destroy()
         end
     end, 1000)
 
@@ -264,6 +279,12 @@ function onPlayerConnected( player )
                 end
             end)
 
+            level:onnotifyonce("end_vote", function ()
+                client_ui_objects[1]:destroy()
+                client_ui_objects[2]:destroy()
+                client_ui_objects[3]:destroy()
+            end)
+
             player:notifyonplayercommand("vote", "+gostand")
             player:onnotifyonce("vote", function ()
                 level:notify("vote"..current_index)
@@ -272,6 +293,11 @@ function onPlayerConnected( player )
             end)
 
             player:onnotifyonce("disconnect", function ()
+                if client_ui_objects[1] ~= nil then
+                    client_ui_objects[1]:destroy()
+                    client_ui_objects[2]:destroy()
+                    client_ui_objects[3]:destroy()
+                end
                 if voted then
                     level:notify("removevote"..current_index)
                 end
