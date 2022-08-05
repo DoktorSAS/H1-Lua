@@ -1,7 +1,7 @@
 # H1-MOD: Modern Warfare Remastered Mapvote
 Developed by [@DoktorSAS](https://twitter.com/DoktorSAS)
 
-![Preview](https://media.discordapp.net/attachments/989844134837747774/1005065808495530014/unknown.png)
+![Preview](https://media.discordapp.net/attachments/744913302496346143/1005094027919622324/unknown.png)
 
 ### Requirements
 
