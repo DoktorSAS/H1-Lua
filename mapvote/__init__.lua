@@ -8,9 +8,10 @@ require("hud")
 local players = {}
 
 local Config = {}
-Config.maps = "mp_convoy mp_showdown mp_bog mp_crash mp_crossfire mp_citystreets mp_shipment mp_vacant mp_broadcast mp_bloc mp_killhouse mp_strike mp_crash_snow mp_bog mp_backlot mp_farm mp_overgrown mp_carentan mp_creek mp_pipeline mp_cargoship mp_bog_summer"
+Config.maps = "mp_convoy mp_showdown mp_bog mp_crash mp_crossfire mp_citystreets mp_shipment mp_vacant mp_broadcast mp_bloc mp_killhouse mp_strike mp_crash_snow mp_backlot mp_farm mp_overgrown mp_carentan mp_creek mp_pipeline mp_cargoship mp_bog_summer"
 Config.gametypes = "war dom hp"
-Config.time = 30
+Config.time = 20
+
 
 Config.shaders = {}
 Config.shaders.gradient_fadein = "gradient_fadein"
@@ -76,35 +77,33 @@ function gametypetostring( gametype )
     return gametype
 end
 
-function choosefromatable(table)
-    random = math.random(1, #table )
+function choosefromatable(list)
+    random = math.random(1, #list )
     print(random)
     return random
-end
-
-function removefromalist(table, value)
-    local index = tablefind(table, value)
-	if index ~= nil then
-		table.remove(table, index)
-	end
 end
 
 function getminplayerstowin()
     return math.floor(tonumber(#players/2) + 1)
 end
 
+Config.running = false
 function mapvote()
-    
+    Config.running = true
     local maps = split(Config.maps, " ")
+    local maps_to_choose = split(Config.maps, " ")
     local maps_to_vote = {}
-    maps_to_vote[1] = choosefromatable(maps)
-    removefromalist(maps, maps_to_vote[1])
+    maps_to_vote[1] = choosefromatable(maps_to_choose)
+    print(maps_to_choose[maps_to_vote[1]])
+    table.remove(maps_to_choose, maps_to_vote[1])
 
-    maps_to_vote[2] = choosefromatable(maps)
-    removefromalist(maps, maps_to_vote[2])
+    maps_to_vote[2] = choosefromatable(maps_to_choose)
+    print(maps_to_choose[maps_to_vote[2]])
+    table.remove(maps_to_choose, maps_to_vote[2])
 
-    maps_to_vote[3] = choosefromatable(maps)
-    removefromalist(maps, maps_to_vote[3])
+    maps_to_vote[3] = choosefromatable(maps_to_choose)
+    print(maps_to_choose[maps_to_vote[3]])
+    table.remove(maps_to_choose, maps_to_vote[3])
 
     local gametypes = split(Config.gametypes, " ")
     local gametypes_to_vote = {}
@@ -117,19 +116,16 @@ function mapvote()
 
     server_ui_objects.background_line = drawbox("icon", 0, 180, "center", "top", "center", "top", vector:new(0.0, 0.0, 0.0), 0.7, Config.shaders.white, (201*3)+(12*3), 121 )
     server_ui_objects.timer = drawtext("font", "objective", 1.3, 0, 100, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "00:00")
-    server_ui_objects.guide = drawtext("font", "objective", 1.3, 0, 120, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "Press ^3[{+attack}] ^7and ^3[{+toggleads_throw}] ^7to scroll^7\nPress ^3[{+gostand}] ^7to confrim selection^7")
+    server_ui_objects.guide = drawtext("font", "objective", 1.3, 0, 120, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "Press ^3[{+attack}] ^7and ^3[{+speed_throw}]^7/^3[{+toggleads_throw}]^7 ^7to scroll^7\nPress ^3[{+gostand}] ^7to confirm selection^7")
 
-    server_ui_objects.mapid_map1 = drawtext("font", "objective", 1.3, -220, 190, "center", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[1]]))
-    server_ui_objects.gametype_map1 = drawtext("font", "objective", 1, -220-40, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, gametypetostring(gametypes[gametypes_to_vote[1]]))
-    server_ui_objects.votes_map1 = drawtext("font", "objective", 1.2, -220+80, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
+    server_ui_objects.mapnameandgametypemap1 = drawtext("font", "objective", 1.1, -220-80, 185, "left", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[1]]) .. "\n\n\n\n\n\n\n" .. gametypetostring(gametypes[gametypes_to_vote[1]]))
+    server_ui_objects.votes_map1 = drawtext("font", "objective", 1.2, -220+80, 278, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
 
-    server_ui_objects.mapid_map2 = drawtext("font", "objective", 1.3, 0, 190, "center", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[2]]))
-    server_ui_objects.gametype_map2 = drawtext("font", "objective", 1, 0-40, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, gametypetostring(gametypes[gametypes_to_vote[2]]))
-    server_ui_objects.votes_map2 = drawtext("font", "objective", 1.2, 0+80, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
+    server_ui_objects.mapnameandgametypemap2 = drawtext("font", "objective", 1.1, 0-80, 185, "left", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[2]]) .. "\n\n\n\n\n\n\n" .. gametypetostring(gametypes[gametypes_to_vote[2]]))
+    server_ui_objects.votes_map2 = drawtext("font", "objective", 1.2, 0+80, 278, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
     
-    server_ui_objects.mapid_map3 = drawtext("font", "objective", 1.3, 220, 190, "center", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[3]]))
-    server_ui_objects.gametype_map3 = drawtext("font", "objective", 1, 220-40, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, gametypetostring(gametypes[gametypes_to_vote[3]]))
-    server_ui_objects.votes_map3 = drawtext("font", "objective", 1.2, 220+80, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
+    server_ui_objects.mapnameandgametypemap3 = drawtext("font", "objective", 1.1, 220-80, 185, "left", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[3]]) .. "\n\n\n\n\n\n\n" .. gametypetostring(gametypes[gametypes_to_vote[3]]))
+    server_ui_objects.votes_map3 = drawtext("font", "objective", 1.2, 220+80, 278, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "0")
 
     local votes = {} -- Votes for each map
     votes[1] = 0
@@ -173,10 +169,6 @@ function mapvote()
     server_ui_objects.timer:settimer(Config.time)
     local loop = game:oninterval(function ()
         Config.time = Config.time - 1
-
-        for index, player in ipairs(players) do
-            player:playsound("ui_mp_timer_countdown")
-        end
         
         if Config.time == 0 then -- When time reach 0 the mapvote end
             if votes[1] > votes[2] and votes[1] > votes[3] then -- map1 is the winner
@@ -186,21 +178,23 @@ function mapvote()
             else
                 game:executecommand('set sv_maprotationcurrent "gametype ' .. gametypes[gametypes_to_vote[3]] .. ' map ' .. maps[maps_to_vote[3]] .. '"')
             end
+
             level:notify("end_vote")
+            for index, player in ipairs(players) do
+                player:notify("end_vote_client") -- Destroy client UI
+            end
+
             server_ui_objects.background_line:destroy()
             server_ui_objects.timer:destroy()
             server_ui_objects.guide:destroy()
 
-            server_ui_objects.mapid_map1:destroy()
-            server_ui_objects.gametype_map1:destroy()
+            server_ui_objects.mapnameandgametypemap1:destroy()
             server_ui_objects.votes_map1:destroy()
         
-            server_ui_objects.mapid_map2:destroy()
-            server_ui_objects.gametype_map2:destroy()
+            server_ui_objects.mapnameandgametypemap2:destroy()
             server_ui_objects.votes_map2:destroy()
             
-            server_ui_objects.mapid_map3:destroy()
-            server_ui_objects.gametype_map3:destroy()
+            server_ui_objects.mapnameandgametypemap3:destroy()
             server_ui_objects.votes_map3:destroy()
         end
     end, 1000)
@@ -209,6 +203,7 @@ function mapvote()
 
     for index, player in ipairs(players) do
         player:notify("start_vote")
+        player:setclientomnvar("ui_use_mlg_hud", 1)
     end
  
 end
@@ -242,65 +237,64 @@ function entity:isentityabot()
 end
 
 function onPlayerConnected( player )
-    if not player:isentityabot() then
+    if not player:isentityabot() and not Config.running then
         table.insert(players, player)
         local disconnectListener = player:onnotifyonce("disconnect", function ()  player:onPlayerDisconnect() end)
 
-        local onMapvoteStart = player:onnotifyonce("start_vote", function ()
-            local client_ui_objects = {}
+        player:onnotifyonce("start_vote", function ()
+            
             local voted = false
         
-            client_ui_objects[1] = player:drawbox("bar", -220, 182, "center", "top", "center", "top", Config.colors.select, 1, Config.shaders.white, 196, 116 )
-            client_ui_objects[2] = player:drawbox("bar", 0, 182, "center", "top", "center", "top", Config.colors.default, 1, Config.shaders.white, 196, 116 )
-            client_ui_objects[3] = player:drawbox("bar", 220, 182, "center", "top", "center", "top", Config.colors.default, 1, Config.shaders.white, 196, 116 )
+            local client_ui_object = player:drawbox("bar", -220, 182, "center", "top", "center", "top", Config.colors.select, 1, Config.shaders.white, 196, 116 )
 
             local current_index = 1
             player:notifyonplayercommand("next", "+attack")
             player:onnotify("next", function ()
                 if not voted then
-                    client_ui_objects[current_index].color = Config.colors.default
                     current_index = current_index + 1
                     if current_index > 3 then
                         current_index = 1
+                        client_ui_object.x = -220
+                    elseif current_index == 2 then
+                        client_ui_object.x = 0
+                    else
+                        client_ui_object.x = 220
                     end
-                    client_ui_objects[current_index].color = Config.colors.select
                 end
             end)
 
+            player:notifyonplayercommand("back", "+speed_throw")
             player:notifyonplayercommand("back", "+toggleads_throw")
             player:onnotify("back", function ()
                 if not voted then
-                    client_ui_objects[current_index].color = Config.colors.default
                     current_index = current_index - 1
                     if current_index < 1 then
                         current_index = 3
+                        client_ui_object.x = 220
+                    elseif current_index == 2 then
+                        client_ui_object.x = 0
+                    else
+                        client_ui_object.x = -220
                     end
-                    client_ui_objects[current_index].color = Config.colors.select
                 end
             end)
 
-            level:onnotifyonce("end_vote", function ()
-                client_ui_objects[1]:destroy()
-                client_ui_objects[2]:destroy()
-                client_ui_objects[3]:destroy()
+            player:onnotifyonce("end_vote_client", function ()
+                client_ui_object:destroy()
             end)
 
             player:notifyonplayercommand("vote", "+gostand")
             player:onnotifyonce("vote", function ()
                 level:notify("vote"..current_index)
-                client_ui_objects[current_index].color = Config.colors.confirm
+                client_ui_object.color = Config.colors.confirm
                 voted = true
             end)
 
             player:onnotifyonce("disconnect", function ()
-                if client_ui_objects[1] ~= nil then
-                    client_ui_objects[1]:destroy()
-                    client_ui_objects[2]:destroy()
-                    client_ui_objects[3]:destroy()
-                end
                 if voted then
                     level:notify("removevote"..current_index)
                 end
+                player:notify("end_vote_client")
             end)
         end)
 
