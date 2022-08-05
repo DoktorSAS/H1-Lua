@@ -117,7 +117,7 @@ function mapvote()
 
     server_ui_objects.background_line = drawbox("icon", 0, 180, "center", "top", "center", "top", vector:new(0.0, 0.0, 0.0), 0.7, Config.shaders.white, (201*3)+(12*3), 121 )
     server_ui_objects.timer = drawtext("font", "objective", 1.3, 0, 100, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "00:00")
-    server_ui_objects.guide = drawtext("font", "objective", 1.3, 0, 120, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "Press ^3[{+attack}] ^7&& ^3[{+toggleads_throw}] to scroll^7\nPress ^3[{+gostand}] ^7to confrim selection^7")
+    server_ui_objects.guide = drawtext("font", "objective", 1.3, 0, 120, "center", "top", "center", "top", vector:new(1, 1, 1), 1, "Press ^3[{+attack}] ^7and ^3[{+toggleads_throw}] ^7to scroll^7\nPress ^3[{+gostand}] ^7to confrim selection^7")
 
     server_ui_objects.mapid_map1 = drawtext("font", "objective", 1.3, -220, 190, "center", "top", "center", "top", vector:new(1, 1, 1), 1, maptoname(maps[maps_to_vote[1]]))
     server_ui_objects.gametype_map1 = drawtext("font", "objective", 1, -220-40, 280, "center", "top", "center", "top", vector:new(1, 1, 1), 1, gametypetostring(gametypes[gametypes_to_vote[1]]))
