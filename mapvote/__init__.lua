@@ -12,7 +12,6 @@ Config.maps = "mp_convoy mp_showdown mp_bog mp_crash mp_crossfire mp_citystreets
 Config.gametypes = "war dom hp"
 Config.time = 20
 
-
 Config.shaders = {}
 Config.shaders.gradient_fadein = "gradient_fadein"
 Config.shaders.gradient = "gradient"
@@ -79,7 +78,6 @@ end
 
 function choosefromatable(list)
     random = math.random(1, #list )
-    print(random)
     return random
 end
 
@@ -94,15 +92,12 @@ function mapvote()
     local maps_to_choose = split(Config.maps, " ")
     local maps_to_vote = {}
     maps_to_vote[1] = choosefromatable(maps_to_choose)
-    print(maps_to_choose[maps_to_vote[1]])
     table.remove(maps_to_choose, maps_to_vote[1])
 
     maps_to_vote[2] = choosefromatable(maps_to_choose)
-    print(maps_to_choose[maps_to_vote[2]])
     table.remove(maps_to_choose, maps_to_vote[2])
 
     maps_to_vote[3] = choosefromatable(maps_to_choose)
-    print(maps_to_choose[maps_to_vote[3]])
     table.remove(maps_to_choose, maps_to_vote[3])
 
     local gametypes = split(Config.gametypes, " ")
@@ -212,9 +207,12 @@ local final_killcam = nil
 final_killcam = game:detour("_id_A78D", "endfinalkillcam", function()
 
     level:onnotifyonce("end_vote", function()
-        game:ontimeout(function()
-            final_killcam.invoke()
-        end, 2000)
+        if Config.running then
+            Config.running = false
+            game:ontimeout(function()
+                final_killcam.invoke()
+            end, 2000)
+        end
     end)
 
     if game:scriptcall("maps/mp/_utility", "_id_A1CA") == 1 and #players >= 1 then -- if is wasthelastround() and there at least one player start the mapvote
@@ -248,34 +246,43 @@ function onPlayerConnected( player )
             local client_ui_object = player:drawbox("bar", -220, 182, "center", "top", "center", "top", Config.colors.select, 1, Config.shaders.white, 196, 116 )
 
             local current_index = 1
+            local validate_input = true
             player:notifyonplayercommand("next", "+attack")
             player:onnotify("next", function ()
-                if not voted then
+                if not voted and validate_input then
+                    validate_input = false
                     current_index = current_index + 1
                     if current_index > 3 then
                         current_index = 1
-                        client_ui_object.x = -220
+                        client_ui_object:affectElement("x", 0.2, -220)
                     elseif current_index == 2 then
-                        client_ui_object.x = 0
+                        client_ui_object:affectElement("x", 0.2, 0)
                     else
-                        client_ui_object.x = 220
+                        client_ui_object:affectElement("x", 0.2, 220)
                     end
+                    game:ontimeout(function ()
+                        validate_input = true
+                    end, 200)
                 end
             end)
 
             player:notifyonplayercommand("back", "+speed_throw")
             player:notifyonplayercommand("back", "+toggleads_throw")
             player:onnotify("back", function ()
-                if not voted then
+                if not voted and validate_input  then
+                    validate_input = false
                     current_index = current_index - 1
                     if current_index < 1 then
                         current_index = 3
-                        client_ui_object.x = 220
+                        client_ui_object:affectElement("x", 0.2, 220)
                     elseif current_index == 2 then
-                        client_ui_object.x = 0
+                        client_ui_object:affectElement("x", 0.2, 0)
                     else
-                        client_ui_object.x = -220
+                        client_ui_object:affectElement("x", 0.2, -220)
                     end
+                    game:ontimeout(function ()
+                        validate_input = true
+                    end, 200)
                 end
             end)
 
