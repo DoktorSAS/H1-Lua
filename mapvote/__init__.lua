@@ -204,7 +204,7 @@ function mapvote()
 end
 
 local final_killcam = nil
-final_killcam = game:detour("_id_A78D", "endfinalkillcam", function()
+final_killcam = game:detour("maps/mp/gametypes/_damage", "endfinalkillcam", function()
 
     level:onnotifyonce("end_vote", function()
         if Config.running then
@@ -215,7 +215,7 @@ final_killcam = game:detour("_id_A78D", "endfinalkillcam", function()
         end
     end)
 
-    if game:scriptcall("maps/mp/_utility", "_id_A1CA") == 1 and #players >= 1 then -- if is wasthelastround() and there at least one player start the mapvote
+    if game:scriptcall("maps/mp/_utility", "waslastround") == 1 and #players >= 1 then -- if is wasthelastround() and there at least one player start the mapvote
         mapvote()
     else
         level:notify("end_vote")
