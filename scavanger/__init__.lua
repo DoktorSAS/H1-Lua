@@ -68,7 +68,7 @@ game:onplayerkilled(function(_self, _inflictor, _attacker, damage, _mod, _weapon
         forcePoint = forcePoint + scavanger.origin;
         initialVelocityZ = game:randomfloatrange( vertVelocityMin, vertVelocityMax )
         initialVelocity = vector:new( 0, 0, initialVelocityZ );
-        scavanger:physicslaunch(forcePoint,initialVelocity)
+        scavanger:physicslaunchclient(forcePoint,initialVelocity)
         game:ontimeout(function ()
             table.insert(scavangers, scavanger)
         end, 750)
